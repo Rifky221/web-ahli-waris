@@ -34,6 +34,19 @@
             <p>Sistem pendaftaran ahli waris</p>
         </div>
 
+        <!-- Download Form Section -->
+        <div class="card-ahli-waris mb-4">
+            <div class="card-header-ahli-waris green">
+                <h3><i class="fas fa-download"></i> Download Form Permohonan</h3>
+            </div>
+            <div class="card-body-ahli-waris">
+                <p>Sebelum mengajukan permohonan, silakan download dan isi form permohonan surat keterangan waris terlebih dahulu.</p>
+                <a href="{{ route('download.surat') }}" class="btn btn-success">
+                    <i class="fas fa-file-download"></i> Download Form Permohonan
+                </a>
+            </div>
+        </div>
+
         <!-- Success/Error Messages -->
         @if(session('success'))
         <div class="alert alert-success">
@@ -44,6 +57,12 @@
         @if(session('error'))
         <div class="alert alert-danger">
             <i class="fas fa-exclamation-triangle"></i> {{ session('error') }}
+        </div>
+        @endif
+
+        @if(session('warning'))
+        <div class="alert alert-warning" style="background-color: #fff3cd; color: #856404; border-color: #ffeeba;">
+            <i class="fas fa-exclamation-circle"></i> {{ session('warning') }}
         </div>
         @endif
 
@@ -112,7 +131,7 @@
             <div class="card-ahli-waris">
                 <div class="card-header-ahli-waris red">
                     <h3>Dokumen yang Diperlukan</h3>
-                    <p class="subtitle">Upload dokumen dengan format PDF, JPG, JPEG, atau PNG. Maksimal 5MB per file.</p>
+                    <p class="subtitle">Upload dokumen dengan format PDF, JPG, JPEG, PNG, atau WEBP. Maksimal 5MB per file.</p>
                     <p class="note"><i class="fas fa-exclamation-circle"></i> Catatan: Dokumen dengan tanda * wajib diunggah.</p>
                 </div>
                 <div class="card-body-ahli-waris">
@@ -210,7 +229,7 @@
                                     name="{{ $doc['name'] }}"
                                     class="file-input"
                                     {{ $doc['required'] ? 'required' : '' }}
-                                    accept=".pdf,.jpg,.jpeg,.png">
+                                    accept=".pdf,.jpg,.jpeg,.png,.webp">
                                 <label for="{{ $doc['name'] }}" class="upload-btn">
                                     <i class="fas fa-cloud-upload-alt"></i> Pilih File
                                 </label>
@@ -226,15 +245,14 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="action-buttons">
+            <div class="action-buttons d-flex gap-3 justify-content-center">
                 <a href="{{ route('beranda') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Kembali
                 </a>
                 <!-- ... form fields ... -->
-    <button type="submit" class="btn btn-primary">
-        <i class="fas fa-paper-plane"></i> Kirim Permohonan
-    </button>
-</form>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Kirim Permohonan
+                </button>
             </div>
         </form>
     </main>
@@ -273,9 +291,9 @@
                     }
 
                     // Validate file type
-                    const allowedExtensions = /(\.pdf|\.jpg|\.jpeg|\.png)$/i;
+                    const allowedExtensions = /(\.pdf|\.jpg|\.jpeg|\.png|\.webp)$/i;
                     if (!allowedExtensions.exec(fileName)) {
-                        fileInfo.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Format tidak didukung (PDF, JPG, PNG)`;
+                        fileInfo.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Format tidak didukung (PDF, JPG, PNG, WEBP)`;
                         uploadArea.classList.add('error');
                         this.value = '';
                         uploadBtn.innerHTML = originalBtnText;

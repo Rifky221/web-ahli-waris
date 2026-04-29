@@ -177,15 +177,36 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 16px;
-            background: rgba(67, 97, 238, 0.05);
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 12px;
-            border: 1px solid rgba(67, 97, 238, 0.1);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background: var(--light-color);
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark-color);
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: var(--gray-color);
         }
         
         .user-avatar {
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             display: flex;
@@ -193,7 +214,16 @@
             justify-content: center;
             color: white;
             font-weight: 600;
-            font-size: 18px;
+            font-size: 14px;
+        }
+
+        .user-avatar-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .logout-btn {
@@ -317,9 +347,103 @@
         .menu-toggle {
             display: none;
         }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 100%;
+                max-width: 280px;
+                z-index: 1050;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s;
+                backdrop-filter: blur(4px);
+            }
+            
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .main-header {
+                padding: 16px;
+                justify-content: space-between;
+            }
+            
+            .main-header > .d-flex {
+                flex: 1;
+                gap: 12px !important;
+                min-width: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 24px;
+                color: var(--dark-color);
+                cursor: pointer;
+                padding: 0;
+                margin-right: 12px;
+            }
+            
+            .header-title {
+                font-size: 18px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .header-actions {
+                gap: 8px;
+                flex-shrink: 0;
+            }
+
+            .user-info {
+                display: none;
+            }
+            
+            .user-profile {
+                min-width: auto;
+                padding: 8px;
+            }
+
+            /* Logout Button Mobile */
+            .logout-btn span {
+                display: none;
+            }
+            .logout-btn {
+                min-width: auto;
+                padding: 8px 12px;
+            }
+            .logout-btn i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="brand">
@@ -351,6 +475,21 @@
                         <span>Data Ahli Waris</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('berita.index') }}" class="nav-link">
+                        <i class="bi bi-newspaper nav-icon"></i>
+                        <span>Berita</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="nav-link w-100 text-start border-0" style="cursor: pointer; background: linear-gradient(135deg, #ff3b55, #d90429); color: white;">
+                            <i class="bi bi-box-arrow-right nav-icon" style="color: white;"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </li>
             </ul>
         </nav>
         
@@ -372,26 +511,25 @@
 
     <div class="content">
         <header class="main-header">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
             <div class="d-flex align-items-center gap-4">
                 <h1 class="header-title mb-0">Permohonan Waris</h1>
             </div>
             
             <div class="header-actions">
-                <div class="user-profile">
-                    <div class="user-avatar">AD</div>
-                    <div>
-                        <div class="fw-medium">Administrator</div>
-                        <small class="text-muted">Admin Sistem</small>
+                <div class="user-profile" data-bs-toggle="modal" data-bs-target="#profileModal" style="cursor: pointer;">
+                    @if(Auth::user() && Auth::user()->avatar)
+                        <img src="{{ asset(Auth::user()->avatar) }}" alt="Avatar" class="user-avatar-img">
+                    @else
+                        <div class="user-avatar">{{ substr(Auth::user()->name ?? 'AD', 0, 2) }}</div>
+                    @endif
+                    <div class="user-info">
+                        <div class="user-name">{{ Auth::user()->name ?? 'Administrator' }}</div>
+                        <div class="user-role">Super Admin</div>
                     </div>
                 </div>
-                
-                <form action="{{ route('logout') }}" method="POST" class="m-0">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="bi bi-box-arrow-right"></i>
-                        Logout
-                    </button>
-                </form>
             </div>
         </header>
 
@@ -482,6 +620,38 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
+        }
+    </script>
+
+    <!-- Profile Modal -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ubah Foto Profil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="avatar" class="form-label">Pilih Foto</label>
+                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*" required>
+                            <div class="form-text">Format: JPG, PNG, JPEG. Maks: 2MB.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 

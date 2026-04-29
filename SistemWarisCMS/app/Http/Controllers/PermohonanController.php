@@ -8,13 +8,37 @@ use Illuminate\Support\Facades\Redirect;
 
 class PermohonanController
 {
-    public function index()
+    public function index(Request $request)
     {
-        $items = DB::table('ahli_waris')
-            ->orderByDesc('created_at')
-            ->paginate(10);
+        $query = DB::table('ahli_waris')->orderByDesc('created_at');
 
-        return view('permohonan.permohonan', compact('items'));
+        if ($request->filled('q')) {
+            $q = $request->input('q');
+            $query->where(function ($x) use ($q) {
+                $x->where('nik', 'like', '%' . $q . '%')
+                  ->orWhere('nomor_telepon', 'like', '%' . $q . '%');
+            });
+        }
+
+        if ($request->filled('tanggal')) {
+            $query->whereDate('created_at', $request->input('tanggal'));
+        }
+
+        if ($request->filled('bulan')) {
+            $query->whereMonth('created_at', $request->input('bulan'));
+        }
+
+        if ($request->filled('tahun')) {
+            $query->whereYear('created_at', $request->input('tahun'));
+        }
+
+        $items = $query->paginate(10)->appends($request->query());
+
+        $pendingCount = DB::table('ahli_waris')
+            ->whereNotIn('status', ['diterima', 'ditolak'])
+            ->count();
+
+        return view('permohonan.permohonan', compact('items', 'pendingCount'));
     }
 
     public function updateStatus(Request $request, $id)
@@ -92,4 +116,3 @@ class PermohonanController
         return Redirect::back()->with('success', 'Fitur tambah belum tersedia');
     }
 }
-

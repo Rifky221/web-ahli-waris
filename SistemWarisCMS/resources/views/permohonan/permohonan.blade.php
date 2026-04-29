@@ -175,6 +175,16 @@
             align-items: center;
             gap: 24px;
         }
+        .header-actions .user-profile {
+            background: linear-gradient(135deg, rgba(67,97,238,0.08), rgba(76,201,240,0.08));
+            border: 1px solid rgba(67,97,238,0.25);
+            box-shadow: 0 10px 24px rgba(67,97,238,0.12);
+            border-radius: 14px;
+            padding: 6px 12px;
+            backdrop-filter: saturate(120%) blur(6px);
+        }
+        .header-actions .user-name { font-weight: 700; color: var(--dark-color); }
+        .header-actions .user-role { color: var(--gray-color); }
         
         .user-profile {
             display: flex;
@@ -187,8 +197,8 @@
         }
         
         .user-avatar {
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             display: flex;
@@ -196,27 +206,36 @@
             justify-content: center;
             color: white;
             font-weight: 600;
-            font-size: 18px;
+            font-size: 14px;
+        }
+
+        .user-avatar-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .logout-btn {
-            background: linear-gradient(135deg, var(--danger-color), #d90429);
+            background: linear-gradient(135deg, #ff3b55, #d90429);
             border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            font-size: 15px;
-            display: flex;
+            padding: 12px 20px;
+            border-radius: 14px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
             transition: var(--transition);
-            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(239, 71, 111, 0.25);
         }
         
         .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(239, 71, 111, 0.3);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 14px 32px rgba(239, 71, 111, 0.35);
         }
         
         /* Main Content with Fixed Layout */
@@ -413,13 +432,37 @@
         }
         
         /* Pagination Styling */
-        .pagination {
-            display: flex;
-            gap: 8px;
+        .pagination-wrapper {
             padding: 24px;
-            justify-content: center;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
             background: var(--light-color);
+        }
+
+        /* Override Bootstrap Pagination Layout */
+        .pagination-wrapper nav > div.d-sm-flex {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 16px !important;
+        }
+        
+        /* Hide redundant simple mobile pagination */
+        .pagination-wrapper nav > div.d-sm-none {
+            display: none !important;
+        }
+
+        .pagination-wrapper .small.text-muted {
+            margin-bottom: 0 !important;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .pagination-wrapper .pagination {
+            gap: 6px;
+            margin-bottom: 0;
+            justify-content: center !important;
+            flex-wrap: wrap;
         }
         
         .page-link {
@@ -479,9 +522,317 @@
         .menu-toggle {
             display: none;
         }
+        
+        .filter-toolbar {
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: var(--light-color);
+            padding: 16px 20px;
+            animation: fadeSlide 0.3s var(--transition);
+        }
+        
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+        }
+        
+        .filter-fields {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .filter-actions {
+            margin-left: auto;
+        }
+        
+        .filter-fields .search-input {
+            flex: 1 1 360px;
+            max-width: 520px;
+            min-width: 320px;
+        }
+        
+        .filter-toolbar .form-control::placeholder {
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-fields {
+                flex-wrap: wrap;
+            }
+            .filter-fields .search-input {
+                min-width: 100%;
+                max-width: 100%;
+                flex: 1 1 100%;
+            }
+            .filter-actions {
+                margin-left: 0;
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+        
+        .filter-toolbar .input-group-text {
+            background: rgba(67, 97, 238, 0.08);
+            color: var(--primary-color);
+            border: 1px solid rgba(67, 97, 238, 0.2);
+        }
+        
+        .filter-toolbar .form-control,
+        .filter-toolbar .form-select {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+        
+        .filter-toolbar .form-control:focus,
+        .filter-toolbar .form-select:focus {
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.15);
+            border-color: rgba(67, 97, 238, 0.5);
+            transform: translateY(-1px);
+        }
+        
+        .filter-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-filter {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: #fff;
+            border-radius: 10px;
+            padding: 8px 16px;
+            transition: var(--transition);
+        }
+        
+        .btn-filter:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 24px rgba(67, 97, 238, 0.35);
+        }
+        
+        .btn-filter:hover .bi {
+            transform: rotate(10deg);
+        }
+        
+        .btn-reset {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--dark-color);
+            border-radius: 10px;
+            padding: 8px 16px;
+            transition: var(--transition);
+        }
+        
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .notify-btn {
+            position: relative;
+            background: rgba(67, 97, 238, 0.08);
+            border: 1px solid rgba(67, 97, 238, 0.2);
+            padding: 10px 14px;
+            border-radius: 12px;
+            color: var(--primary-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        .notify-btn:hover { transform: translateY(-2px); }
+        .notify-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--danger-color);
+            color: #fff;
+            border-radius: 12px;
+            font-size: 12px;
+            padding: 2px 6px;
+            box-shadow: var(--shadow-light);
+        }
+        .notify-btn.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: #fff;
+            border: none;
+            box-shadow: 0 12px 28px rgba(67, 97, 238, 0.35);
+            animation: notifyPulse 1.6s ease-in-out infinite;
+        }
+        .notify-btn.active .bi {
+            animation: bellRing 1.4s ease-in-out infinite;
+        }
+        .notify-badge {
+            background: linear-gradient(135deg, var(--danger-color), #ff6b8b);
+            animation: badgeBounce 2s ease-in-out infinite;
+        }
+        @keyframes notifyPulse {
+            0% { box-shadow: 0 0 0 0 rgba(67,97,238,0.35); }
+            70% { box-shadow: 0 0 0 14px rgba(67,97,238,0); }
+            100% { box-shadow: 0 0 0 0 rgba(67,97,238,0); }
+        }
+        @keyframes bellRing {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(12deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-12deg); }
+            100% { transform: rotate(0deg); }
+        }
+        @keyframes badgeBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+        
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 100%;
+                max-width: 280px;
+                z-index: 1050;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 1040;
+                display: none;
+                backdrop-filter: blur(2px);
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 24px;
+                color: var(--dark-color);
+                cursor: pointer;
+                margin-right: 16px;
+            }
+            
+            .main-header {
+                padding: 16px;
+                justify-content: space-between;
+            }
+            
+            .main-header > .d-flex {
+                flex: 1;
+                gap: 12px !important;
+                min-width: 0;
+            }
+
+            .header-title {
+                font-size: 18px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .header-actions {
+                gap: 8px;
+                flex-shrink: 0;
+            }
+
+            .notify-btn {
+                padding: 0;
+                width: 40px;
+                height: 40px;
+                justify-content: center;
+                border-radius: 10px;
+            }
+
+            .logout-btn {
+                font-size: 0;
+                padding: 0;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: unset;
+                border-radius: 10px;
+            }
+
+            .logout-btn i {
+                font-size: 18px;
+                margin: 0;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .user-profile {
+                min-width: auto;
+                padding: 8px;
+            }
+            
+            .main-content {
+                padding: 16px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .filter-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-toolbar .input-group {
+                max-width: 100% !important;
+                width: 100%;
+            }
+
+            .filter-actions {
+                display: flex;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .filter-actions .btn {
+                flex: 1;
+                justify-content: center;
+            }
+            
+            .table-responsive {
+                overflow-x: auto;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
     <!-- Sidebar Fixed -->
     <aside class="sidebar">
         <div class="sidebar-header">
@@ -514,6 +865,21 @@
                         <span>Data Ahli Waris</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('berita.index') }}" class="nav-link">
+                        <i class="bi bi-newspaper nav-icon"></i>
+                        <span>Berita</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="nav-link w-100 text-start border-0" style="cursor: pointer; background: linear-gradient(135deg, #ff3b55, #d90429); color: white;">
+                            <i class="bi bi-box-arrow-right nav-icon" style="color: white;"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </li>
             </ul>
         </nav>
         
@@ -537,26 +903,31 @@
     <div class="content">
         <!-- Fixed Header -->
         <header class="main-header">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
             <div class="d-flex align-items-center gap-4">
                 <h1 class="header-title mb-0">Permohonan Waris</h1>
             </div>
             
             <div class="header-actions">
-                <div class="user-profile">
-                    <div class="user-avatar">AD</div>
-                    <div>
-                        <div class="fw-medium">Administrator</div>
-                        <small class="text-muted">Admin Sistem</small>
+                <a href="{{ route('permohonan.notify') }}" class="notify-btn {{ (isset($pendingCount) && $pendingCount > 0) ? 'active' : '' }}" title="Permohonan belum diproses">
+                    <i class="bi bi-bell"></i>
+                    @if(isset($pendingCount) && $pendingCount > 0)
+                        <span class="notify-badge">{{ $pendingCount }}</span>
+                    @endif
+                </a>
+                <div class="user-profile" data-bs-toggle="modal" data-bs-target="#profileModal" style="cursor: pointer;">
+                    @if(Auth::user() && Auth::user()->avatar)
+                        <img src="{{ asset(Auth::user()->avatar) }}" alt="Avatar" class="user-avatar-img">
+                    @else
+                        <div class="user-avatar">{{ substr(Auth::user()->name ?? 'AD', 0, 2) }}</div>
+                    @endif
+                    <div class="user-info">
+                        <div class="user-name">{{ Auth::user()->name ?? 'Administrator' }}</div>
+                        <div class="user-role">Super Admin</div>
                     </div>
                 </div>
-                
-                <form action="{{ route('logout') }}" method="POST" class="m-0">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="bi bi-box-arrow-right"></i>
-                        Logout
-                    </button>
-                </form>
             </div>
         </header>
 
@@ -585,26 +956,59 @@
             @endif
 
             <!-- Table Card -->
-            <div class="table-card">
+            <div id="permohonan-terbaru" class="table-card">
                 <div class="table-card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h5 class="mb-0">Daftar Permohonan</h5>
                             <small class="text-muted">Total {{ $items->total() }} data permohonan</small>
                         </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <button class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-filter"></i>
-                                Filter
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-download"></i>
-                                Export
-                            </button>
-                        </div>
                     </div>
                 </div>
-                
+            
+            <div class="filter-toolbar">
+                @php $tahunSekarang = date('Y'); @endphp
+                <form action="{{ route('permohonan.index') }}" method="GET" class="filter-form">
+                    <div class="filter-fields">
+                        <div class="input-group input-group-sm search-input">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" name="q" class="form-control" placeholder="Cari NIK atau No Telepon" value="{{ request('q') }}">
+                        </div>
+                        <div class="input-group input-group-sm" style="max-width: 220px;">
+                            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                            <input type="date" name="tanggal" class="form-control" value="{{ request('tanggal') }}">
+                        </div>
+                        <div class="input-group input-group-sm" style="max-width: 200px;">
+                            <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
+                            <select name="bulan" class="form-select">
+                                <option value="">Bulan</option>
+                                @for ($b = 1; $b <= 12; $b++)
+                                    <option value="{{ $b }}" {{ (string)$b === (string)request('bulan') ? 'selected' : '' }}>
+                                        {{ \Carbon\Carbon::create()->month($b)->locale('id')->isoFormat('MMMM') }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="input-group input-group-sm" style="max-width: 160px;">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <select name="tahun" class="form-select">
+                                <option value="">Tahun</option>
+                                @for ($t = $tahunSekarang; $t >= $tahunSekarang - 10; $t--)
+                                    <option value="{{ $t }}" {{ (string)$t === (string)request('tahun') ? 'selected' : '' }}>{{ $t }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-filter btn-sm">
+                            <i class="bi bi-funnel"></i>
+                            Filter
+                        </button>
+                        <a href="{{ route('permohonan.index') }}" class="btn btn-reset btn-sm">Reset</a>
+                    </div>
+                </form>
+            </div>
+            
                 <div class="table-card-body">
                     <div class="table-responsive">
                         <table class="table">
@@ -716,68 +1120,49 @@
                     </div>
                     
                     @if($items->hasPages())
-                        <div class="pagination">
+                        <div class="pagination-wrapper">
                             {{ $items->links() }}
                         </div>
                     @endif
                 </div>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="row mt-4">
-                <div class="col-md-4">
-                    <div class="card" style="border-radius: var(--border-radius); border: 1px solid rgba(0, 0, 0, 0.03);">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
-                                    <i class="bi bi-folder-plus text-primary" style="font-size: 24px;"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted">Total Permohonan</div>
-                                    <div class="h3 mb-0 fw-bold">{{ $items->total() }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card" style="border-radius: var(--border-radius); border: 1px solid rgba(0, 0, 0, 0.03);">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3">
-                                    <i class="bi bi-check-circle text-success" style="font-size: 24px;"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted">Diterima</div>
-                                    <div class="h3 mb-0 fw-bold">
-                                        {{ $items->where('status', 'diterima')->count() }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card" style="border-radius: var(--border-radius); border: 1px solid rgba(0, 0, 0, 0.03);">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-danger bg-opacity-10 rounded-circle p-3 me-3">
-                                    <i class="bi bi-x-circle text-danger" style="font-size: 24px;"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted">Ditolak</div>
-                                    <div class="h3 mb-0 fw-bold">
-                                        {{ $items->where('status', 'ditolak')->count() }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
+        }
+    </script>
+
+    <!-- Profile Modal -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ubah Foto Profil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="avatar" class="form-label">Pilih Foto</label>
+                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*" required>
+                            <div class="form-text">Format: JPG, PNG, JPEG. Maks: 2MB.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

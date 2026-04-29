@@ -180,43 +180,118 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 16px;
-            background: rgba(67, 97, 238, 0.05);
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 12px;
-            border: 1px solid rgba(67, 97, 238, 0.1);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background: var(--light-color);
         }
         
         .user-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
+            width: 36px; height: 36px; border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 600; font-size: 14px;
+        }
+
+        .user-avatar-img {
+            width: 36px; height: 36px; border-radius: 50%;
+            object-fit: cover; border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
             font-weight: 600;
-            font-size: 18px;
+            font-size: 14px;
+            color: var(--dark-color);
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: var(--gray-color);
         }
         
         .logout-btn {
-            background: linear-gradient(135deg, var(--danger-color), #d90429);
+            background: linear-gradient(135deg, #ff3b55, #d90429);
             border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            font-size: 15px;
-            display: flex;
+            padding: 12px 20px;
+            border-radius: 14px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
             transition: var(--transition);
             cursor: pointer;
+            box-shadow: 0 10px 24px rgba(239, 71, 111, 0.25);
         }
         
         .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(239, 71, 111, 0.3);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 14px 32px rgba(239, 71, 111, 0.35);
+        }
+        
+        .notify-btn {
+            position: relative;
+            background: rgba(67, 97, 238, 0.08);
+            border: 1px solid rgba(67, 97, 238, 0.2);
+            padding: 10px 14px;
+            border-radius: 12px;
+            color: var(--primary-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        .notify-btn:hover { transform: translateY(-2px); }
+        .notify-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: linear-gradient(135deg, var(--danger-color), #ff6b8b);
+            color: #fff;
+            border-radius: 12px;
+            font-size: 12px;
+            padding: 2px 6px;
+            box-shadow: var(--shadow-light);
+            animation: badgeBounce 2s ease-in-out infinite;
+        }
+        .notify-btn.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: #fff;
+            border: none;
+            box-shadow: 0 12px 28px rgba(67, 97, 238, 0.35);
+            animation: notifyPulse 1.6s ease-in-out infinite;
+        }
+        .notify-btn.active .bi {
+            animation: bellRing 1.4s ease-in-out infinite;
+        }
+        @keyframes notifyPulse {
+            0% { box-shadow: 0 0 0 0 rgba(67,97,238,0.35); }
+            70% { box-shadow: 0 0 0 14px rgba(67,97,238,0); }
+            100% { box-shadow: 0 0 0 0 rgba(67,97,238,0); }
+        }
+        @keyframes bellRing {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(12deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-12deg); }
+            100% { transform: rotate(0deg); }
+        }
+        @keyframes badgeBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
         }
         
         /* Main Content with Fixed Layout */
@@ -281,6 +356,100 @@
             box-shadow: var(--shadow-light);
             overflow: hidden;
             border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        .table-card-header {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.08), rgba(76, 201, 240, 0.08));
+        }
+        .table thead th.sticky {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .table thead th {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.06), rgba(76, 201, 240, 0.06));
+            border-bottom: 2px solid rgba(67, 97, 238, 0.18);
+        }
+        .table tbody tr:nth-child(odd) {
+            background: rgba(67, 97, 238, 0.025);
+        }
+        .table tbody tr:nth-child(even) {
+            background: rgba(76, 201, 240, 0.02);
+        }
+        .table tbody tr:hover {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.08), rgba(76, 201, 240, 0.06));
+            box-shadow: inset 0 -1px 0 rgba(67, 97, 238, 0.15);
+        }
+        .row-pending {
+            background: linear-gradient(90deg, rgba(255, 209, 102, 0.22), rgba(255, 209, 102, 0.1));
+            box-shadow: inset 4px 0 0 #ffb938;
+        }
+        .row-pending:hover {
+            background: linear-gradient(90deg, rgba(255, 209, 102, 0.32), rgba(255, 209, 102, 0.16));
+        }
+        .row-accepted:hover { background: rgba(6, 214, 160, 0.08); }
+        .row-rejected:hover { background: rgba(239, 71, 111, 0.08); }
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .chip-pending { background: linear-gradient(135deg, rgba(255, 209, 102, 0.35), rgba(255, 209, 102, 0.15)); color: #b07900; }
+        .chip-accepted { background: linear-gradient(135deg, rgba(6, 214, 160, 0.35), rgba(6, 214, 160, 0.15)); color: #0a9f77; }
+        .chip-rejected { background: linear-gradient(135deg, rgba(239, 71, 111, 0.35), rgba(239, 71, 111, 0.15)); color: #b3123a; }
+        
+        .filter-toolbar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .filter-toolbar .input-group-text {
+            background: rgba(67, 97, 238, 0.08);
+            color: var(--primary-color);
+            border: 1px solid rgba(67, 97, 238, 0.2);
+        }
+        .filter-toolbar .form-select, .filter-toolbar .form-control {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+        .filter-toolbar .form-select:focus, .filter-toolbar .form-control:focus {
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.15);
+            border-color: rgba(67, 97, 238, 0.5);
+            transform: translateY(-1px);
+        }
+        .btn-filter {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: #fff;
+            border-radius: 10px;
+            padding: 8px 16px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-filter:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 24px rgba(67, 97, 238, 0.35);
+        }
+        .btn-filter:hover .bi {
+            transform: rotate(10deg);
+        }
+        .btn-reset {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--dark-color);
+            border-radius: 10px;
+            padding: 8px 16px;
+            transition: var(--transition);
+        }
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
         
         .table-card-header {
@@ -483,9 +652,142 @@
         .menu-toggle {
             display: none;
         }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 100%;
+                max-width: 280px;
+                z-index: 1050;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            /* Logout Button Mobile */
+            .logout-btn span {
+                display: none;
+            }
+            .logout-btn {
+                min-width: auto;
+                padding: 8px 12px;
+            }
+            .logout-btn i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s;
+                backdrop-filter: blur(4px);
+            }
+            
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .main-header {
+                padding: 16px;
+                justify-content: space-between;
+            }
+            
+            .main-header > .d-flex {
+                flex: 1;
+                gap: 12px !important;
+                min-width: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 24px;
+                color: var(--dark-color);
+                cursor: pointer;
+                padding: 0;
+                margin-right: 12px;
+            }
+            
+            .header-title {
+                font-size: 18px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .header-actions {
+                gap: 8px;
+                flex-shrink: 0;
+            }
+
+            .notify-btn {
+                padding: 0;
+                width: 40px;
+                height: 40px;
+                justify-content: center;
+                border-radius: 10px;
+            }
+
+            .user-info {
+                display: none;
+            }
+            
+            .user-profile {
+                min-width: auto;
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .table-card-header .d-flex {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 16px;
+            }
+            
+            .filter-toolbar {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .filter-toolbar .input-group {
+                max-width: 100% !important;
+                width: 100%;
+                flex: 1 1 100%;
+            }
+
+            .filter-toolbar .btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .table-card-header > .d-flex > div:first-child {
+                width: 100%;
+                padding-bottom: 8px;
+                border-bottom: 1px dashed rgba(0,0,0,0.1);
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
     <!-- Sidebar Fixed -->
     <aside class="sidebar">
         <div class="sidebar-header">
@@ -518,6 +820,21 @@
                         <span>Data Ahli Waris</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('berita.index') }}" class="nav-link">
+                        <i class="bi bi-newspaper nav-icon"></i>
+                        <span>Berita</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="nav-link w-100 text-start border-0" style="cursor: pointer; background: linear-gradient(135deg, #ff3b55, #d90429); color: white;">
+                            <i class="bi bi-box-arrow-right nav-icon" style="color: white;"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </li>
             </ul>
         </nav>
         
@@ -541,26 +858,31 @@
     <div class="content">
         <!-- Fixed Header -->
         <header class="main-header">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
             <div class="d-flex align-items-center gap-4">
                 <h1 class="header-title mb-0">Data Ahli Waris</h1>
             </div>
             
             <div class="header-actions">
-                <div class="user-profile">
-                    <div class="user-avatar">AD</div>
-                    <div>
-                        <div class="fw-medium">Administrator</div>
-                        <small class="text-muted">Admin Sistem</small>
+                <a href="{{ route('permohonan.notify') }}" class="notify-btn {{ (isset($pendingCount) && $pendingCount > 0) ? 'active' : '' }}" title="Permohonan belum diproses">
+                    <i class="bi bi-bell"></i>
+                    @if(isset($pendingCount) && $pendingCount > 0)
+                        <span class="notify-badge">{{ $pendingCount }}</span>
+                    @endif
+                </a>
+                <div class="user-profile" data-bs-toggle="modal" data-bs-target="#profileModal" style="cursor: pointer;">
+                    @if(Auth::user() && Auth::user()->avatar)
+                        <img src="{{ asset(Auth::user()->avatar) }}" alt="Avatar" class="user-avatar-img">
+                    @else
+                        <div class="user-avatar">{{ substr(Auth::user()->name ?? 'AD', 0, 2) }}</div>
+                    @endif
+                    <div class="user-info">
+                        <div class="user-name">{{ Auth::user()->name ?? 'Administrator' }}</div>
+                        <div class="user-role">Admin Sistem</div>
                     </div>
                 </div>
-                
-                <form action="{{ route('logout') }}" method="POST" class="m-0">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="bi bi-box-arrow-right"></i>
-                        Logout
-                    </button>
-                </form>
             </div>
         </header>
 
@@ -578,19 +900,56 @@
             </div>
 
             <!-- Table Card -->
-            <div class="table-card">
+            <div id="data-ahli-waris" class="table-card">
                 <div class="table-card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h5 class="mb-0">Daftar Ahli Waris</h5>
-                            <small class="text-muted">Total {{ count($ahliWaris) }} data</small>
+                            <small class="text-muted">Total {{ $totalCount ?? count($ahliWaris) }} data</small>
                         </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <button class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-download"></i>
-                                Export Data
+                        <form action="{{ route('ahli-waris.index') }}" method="GET" class="filter-toolbar">
+                            <div class="input-group input-group-sm" style="max-width: 220px;">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" name="q" class="form-control" placeholder="Cari NIK/Nama/Telepon/Alamat" value="{{ request('q') }}">
+                            </div>
+                            <div class="input-group input-group-sm" style="max-width: 180px;">
+                                <span class="input-group-text"><i class="bi bi-filter"></i></span>
+                                <select name="status" class="form-select">
+                                    <option value="">Semua Status</option>
+                                    <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Belum Diproses</option>
+                                    <option value="diterima" {{ request('status')==='diterima' ? 'selected' : '' }}>Diterima</option>
+                                    <option value="ditolak" {{ request('status')==='ditolak' ? 'selected' : '' }}>Ditolak</option>
+                                </select>
+                            </div>
+                            @php $tahunSekarang = date('Y'); @endphp
+                            <div class="input-group input-group-sm" style="max-width: 160px;">
+                                <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
+                                <select name="bulan" class="form-select">
+                                    <option value="">Bulan</option>
+                                    @for ($b = 1; $b <= 12; $b++)
+                                        <option value="{{ $b }}" {{ (string)$b === (string)request('bulan') ? 'selected' : '' }}>
+                                            {{ \Carbon\Carbon::create()->month($b)->locale('id')->isoFormat('MMMM') }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="input-group input-group-sm" style="max-width: 140px;">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                <select name="tahun" class="form-select">
+                                    <option value="">Tahun</option>
+                                    @for ($t = $tahunSekarang; $t >= $tahunSekarang - 10; $t--)
+                                        <option value="{{ $t }}" {{ (string)$t === (string)request('tahun') ? 'selected' : '' }}>{{ $t }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-filter btn-sm">
+                                <i class="bi bi-funnel"></i> Filter
                             </button>
-                        </div>
+                            <a href="{{ route('ahli-waris.index') }}" class="btn btn-reset btn-sm">Reset</a>
+                            <a href="{{ route('ahli-waris.export') }}" class="btn btn-success btn-sm">
+                                <i class="bi bi-file-earmark-excel"></i> Export Excel
+                            </a>
+                        </form>
                     </div>
                 </div>
                 
@@ -599,19 +958,24 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>NIK</th>
-                                    <th>Nama Lengkap</th>
-                                    <th>Nomor Telepon</th>
-                                    <th>Alamat</th>
-                                    <th>Status</th>
-                                    <th>Dokumen</th>
-                                    <th>Tanggal Daftar</th>
+                                    <th class="sticky">#</th>
+                                    <th class="sticky">NIK</th>
+                                    <th class="sticky">Nama Lengkap</th>
+                                    <th class="sticky">Nomor Telepon</th>
+                                    <th class="sticky">Alamat</th>
+                                    <th class="sticky">Status</th>
+                                    <th class="sticky">Dokumen</th>
+                                    <th class="sticky">Tanggal Daftar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($ahliWaris as $item)
-                                    <tr>
+                                    @php
+                                        $isAccepted = ($item->status == '1' || $item->status == 'diterima');
+                                        $isRejected = ($item->status == '2' || $item->status == 'ditolak');
+                                        $rowClass = $isAccepted ? 'row-accepted' : ($isRejected ? 'row-rejected' : 'row-pending');
+                                    @endphp
+                                    <tr class="{{ $rowClass }}">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="fw-medium">{{ $item->nik }}</div>
@@ -622,12 +986,12 @@
                                         <td>{{ $item->nomor_telepon }}</td>
                                         <td>{{ $item->alamat }}</td>
                                         <td>
-                                            @if($item->status == '1' || $item->status == 'diterima')
-                                                <span class="badge bg-success">Diterima</span>
-                                            @elseif($item->status == '2' || $item->status == 'ditolak')
-                                                <span class="badge bg-danger">Ditolak</span>
+                                            @if($isAccepted)
+                                                <span class="status-chip chip-accepted"><i class="bi bi-check-circle"></i> Diterima</span>
+                                            @elseif($isRejected)
+                                                <span class="status-chip chip-rejected"><i class="bi bi-x-circle"></i> Ditolak</span>
                                             @else
-                                                <span class="badge bg-warning">Proses</span>
+                                                <span class="status-chip chip-pending"><i class="bi bi-hourglass-split"></i> Belum Diproses</span>
                                             @endif
                                         </td>
                                         <td>
@@ -711,5 +1075,47 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+    </script>
+
+    <!-- Profile Modal -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ubah Foto Profil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body text-center">
+                        <div class="mb-3">
+                            @if(Auth::user() && Auth::user()->avatar)
+                                <img src="{{ asset(Auth::user()->avatar) }}" alt="Current Avatar" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #eee;">
+                            @else
+                                <div class="rounded-circle mb-3 d-inline-flex align-items-center justify-content-center bg-light text-primary fw-bold" style="width: 100px; height: 100px; font-size: 32px; border: 3px solid #eee;">
+                                    {{ substr(Auth::user()->name ?? 'AD', 0, 2) }}
+                                </div>
+                            @endif
+                        </div>
+                        <div class="mb-3">
+                            <label for="avatar" class="form-label">Pilih Foto Baru</label>
+                            <input type="file" class="form-control" id="avatar" name="avatar" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

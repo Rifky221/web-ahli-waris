@@ -8,10 +8,96 @@ use Illuminate\Support\Facades\Response;
 
 class AhliWarisController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $ahliWaris = DB::table('ahli_waris')->orderBy('created_at', 'desc')->get();
-        return view('ahli_waris.index', compact('ahliWaris'));
+        $query = DB::table('ahli_waris')->orderByDesc('created_at');
+
+        if ($request->filled('q')) {
+            $q = $request->input('q');
+            $query->where(function ($x) use ($q) {
+                $x->where('nik', 'like', '%' . $q . '%')
+                  ->orWhere('nama_lengkap', 'like', '%' . $q . '%')
+                  ->orWhere('nomor_telepon', 'like', '%' . $q . '%')
+                  ->orWhere('alamat', 'like', '%' . $q . '%');
+            });
+        }
+
+        if ($request->filled('status')) {
+            $status = $request->input('status');
+            if ($status === 'pending') {
+                $query->whereNotIn('status', ['diterima', 'ditolak']);
+            } elseif (in_array($status, ['diterima', 'ditolak'], true)) {
+                $query->where('status', $status)->orWhere(function($q) use ($status) {
+                    // cover numeric legacy statuses
+                    if ($status === 'diterima') $q->where('status', '1');
+                    if ($status === 'ditolak') $q->where('status', '2');
+                });
+            }
+        }
+        
+        if ($request->filled('focus_id')) {
+            $query->where('id', $request->input('focus_id'));
+        }
+
+        if ($request->filled('bulan')) {
+            $query->whereMonth('created_at', $request->input('bulan'));
+        }
+        if ($request->filled('tahun')) {
+            $query->whereYear('created_at', $request->input('tahun'));
+        }
+
+        $ahliWaris = $query->get();
+
+        $pendingCount  = DB::table('ahli_waris')->whereNotIn('status', ['diterima', 'ditolak'])->count();
+        $diterimaCount = DB::table('ahli_waris')->whereIn('status', ['diterima', '1'])->count();
+        $ditolakCount  = DB::table('ahli_waris')->whereIn('status', ['ditolak', '2'])->count();
+        $totalCount    = DB::table('ahli_waris')->count();
+
+        return view('ahli_waris.index', compact('ahliWaris', 'pendingCount', 'diterimaCount', 'ditolakCount', 'totalCount'));
+    }
+
+    public function export()
+    {
+        $fileName = 'data-ahli-waris-' . date('Y-m-d_H-i-s') . '.csv';
+        $data = DB::table('ahli_waris')->orderByDesc('created_at')->get();
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['No', 'NIK', 'Nama Lengkap', 'Nomor Telepon', 'Alamat', 'Status', 'Tanggal Dibuat'];
+
+        $callback = function() use($data, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($data as $index => $row) {
+                $statusLabel = 'Belum Diproses';
+                if ($row->status == '1' || $row->status == 'diterima') {
+                    $statusLabel = 'Diterima';
+                } elseif ($row->status == '2' || $row->status == 'ditolak') {
+                    $statusLabel = 'Ditolak';
+                }
+
+                fputcsv($file, [
+                    $index + 1,
+                    "'".$row->nik, // Prevent Excel from converting to scientific notation
+                    $row->nama_lengkap,
+                    $row->nomor_telepon,
+                    $row->alamat,
+                    $statusLabel,
+                    $row->created_at
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function showDokumen($id, $field)

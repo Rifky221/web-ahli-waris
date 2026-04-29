@@ -58,19 +58,19 @@ class PengajuanController extends Controller
             'nama_lengkap' => 'required|string|max:100',
             'nomor_telepon' => 'required|string|max:20',
             'alamat' => 'required|string',
-            'surat_pengantar_rt_rw' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'surat_pernyataan_ahli_waris' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'foto_bukti_penandatanganan' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'surat_keterangan_kematian' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'surat_buku_nikah' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'ktp_kk_penerima_manfaat' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'akta_kelahiran_ijazah' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'surat_nikah_ahli_waris' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'akta_perceraian' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'akta_kematian_ahli_waris' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'ktp_keluarga_ahli_waris' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'surat_pernyataan_keabsahan' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'surat_kuasa' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'surat_pengantar_rt_rw' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'surat_pernyataan_ahli_waris' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'foto_bukti_penandatanganan' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'surat_keterangan_kematian' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'surat_buku_nikah' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'ktp_kk_penerima_manfaat' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'akta_kelahiran_ijazah' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'surat_nikah_ahli_waris' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'akta_perceraian' => 'nullable|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'akta_kematian_ahli_waris' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'ktp_keluarga_ahli_waris' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'surat_pernyataan_keabsahan' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
+            'surat_kuasa' => 'required|file|extensions:pdf,jpg,jpeg,png,webp|max:5120',
         ]);
 
         if ($validator->fails()) {
@@ -98,7 +98,64 @@ class PengajuanController extends Controller
                 'surat_kuasa',
             ] as $field) {
                 if ($request->hasFile($field) && $request->file($field)->isValid()) {
-                    $paths[$field] = $request->file($field)->store('dokumen/ahli-waris', 'public');
+                    $file = $request->file($field);
+                    $mime = $file->getMimeType();
+
+                    // Cek jika file adalah gambar (image/jpeg, image/png, dll) dan ekstensi GD aktif
+                    if (str_starts_with($mime, 'image/') && extension_loaded('gd')) {
+                        try {
+                            // Generate nama file baru dengan ekstensi .webp
+                            $filename = pathinfo($file->hashName(), PATHINFO_FILENAME) . '.webp';
+                            $relativePath = 'dokumen/ahli-waris/' . $filename;
+                            
+                            // Pastikan direktori ada
+                            if (!Storage::disk('public')->exists('dokumen/ahli-waris')) {
+                                Storage::disk('public')->makeDirectory('dokumen/ahli-waris');
+                            }
+
+                            $absolutePath = Storage::disk('public')->path($relativePath);
+                            $sourcePath = $file->getRealPath();
+                            $image = null;
+
+                            // Load gambar berdasarkan tipe MIME
+                            switch ($mime) {
+                                case 'image/jpeg':
+                                case 'image/pjpeg':
+                                    $image = @imagecreatefromjpeg($sourcePath);
+                                    break;
+                                case 'image/png':
+                                case 'image/x-png':
+                                    $image = @imagecreatefrompng($sourcePath);
+                                    if ($image) {
+                                        // Pertahankan transparansi untuk PNG
+                                        imagepalettetotruecolor($image);
+                                        imagealphablending($image, true);
+                                        imagesavealpha($image, true);
+                                    }
+                                    break;
+                                case 'image/webp':
+                                case 'image/x-webp':
+                                    $image = @imagecreatefromwebp($sourcePath);
+                                    break;
+                            }
+
+                            if ($image) {
+                                // Simpan sebagai WEBP dengan kualitas 80
+                                imagewebp($image, $absolutePath, 80);
+                                imagedestroy($image);
+                                $paths[$field] = $relativePath;
+                            } else {
+                                // Fallback jika gagal convert, simpan aslinya
+                                $paths[$field] = $file->store('dokumen/ahli-waris', 'public');
+                            }
+                        } catch (\Exception $e) {
+                            // Jika terjadi error saat konversi, fallback simpan aslinya
+                            $paths[$field] = $file->store('dokumen/ahli-waris', 'public');
+                        }
+                    } else {
+                        // Jika bukan gambar (misal PDF), simpan seperti biasa
+                        $paths[$field] = $file->store('dokumen/ahli-waris', 'public');
+                    }
                 } else {
                     $paths[$field] = null;
                 }

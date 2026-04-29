@@ -266,8 +266,7 @@
         <!-- Panel kiri -->
         <div class="left-panel">
             <div class="left-logo">
-                <!-- Ganti dengan <img src="{{ asset('images/logo.png') }}" alt="Logo"> -->
-                <img src="{{ asset('/img/logo-jakarta-selatan.png') }}" alt="Logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo">
             </div>
 
             <div class="left-title">
